@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
+const nodeMailer = require('nodemailer');
+
 /**
  * register methodo
  */
@@ -40,4 +42,33 @@ exports.login = (req, res) => {
 
     });
 
+}
+
+
+exports.emailSend = (req, res) =>{
+    const {email} = req.body;
+
+    let transporter = nodeMailer.createTransport({
+        host:"",
+        port:587,
+        secure:false,
+        auth: {
+            user:"",
+            pass: ""
+        },
+        tls: {
+            rejectUnauthorized: false,
+        }
+    });
+
+    const emailData = {
+        from:"",
+        to:`${email}`,
+        subject:"teste de envio de email",
+        html:`<h2>Test test test</h2>`
+    }
+
+    transporter.sendMail(emailData).then(sent => {
+        return res.json({mensage:`email hasn been send ${email}`});
+    })
 }
